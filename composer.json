@@ -1,0 +1,22 @@
+{
+  "name": "cupracer/thumbsniper-agent",
+  "description": "ThumbSniper Agent",
+  "homepage": "https://thumbsniper.com",
+  "minimum-stability": "dev",
+  "license": "GPL-3.0+",
+  "authors": [
+    {
+      "name": "Thomas Schulte",
+      "email": "thomas@cupracer.de",
+      "homepage": "https://www.mynakedgirlfriend.de",
+      "role": "Project founder"
+    }
+  ],
+  "autoload": {
+    "psr-4": {"ThumbSniper\\": "lib/thumbsniper/"}
+  },
+  "require": {
+    "thumbsniper/shared-libs": "v0.8.0"
+  }
+}
+
