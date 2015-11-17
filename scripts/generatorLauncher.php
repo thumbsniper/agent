@@ -57,29 +57,42 @@ $generator = new Generator($argv[1]);
 $jsonTargetData = get_url($generator->target_next);
 
 $target = null;
+$sleep = 0;
 
 if(is_numeric($jsonTargetData))
 {
     $sleepDuration = intval($jsonTargetData);
-    echo "sleeping for " . $sleepDuration . " seconds\n";
-    sleep($sleepDuration);
+    echo "No pending jobs. Set sleep to " . $sleepDuration . " seconds\n";
+
+    if($sleepDuration > 0)
+    {
+        $sleep = $sleepDuration;
+    }
 }elseif(!empty($jsonTargetData)) {
     $target_serialized = base64_decode($jsonTargetData, true);
     $target = unserialize($target_serialized);
+
+    if($target instanceof Target) {
+        $generator->setTarget($target);
+
+        if ($argv[1] == "normal" || $argv[1] == "longrun") {
+            $generator->shoot();
+        }
+
+        if ($argv[1] == "image") {
+            $generator->convert();
+        }
+    }else {
+        echo "Invalid target. Set sleep to a random time (fallback)\n";
+        $sleep = mt_rand(5, 30);
+    }
+}else {
+    echo "Unknown server response. Set sleep to a random time (fallback)\n";
+    $sleep = mt_rand(5, 30);
 }
 
-if($target instanceof Target) {
-    $generator->setTarget($target);
-
-    if ($argv[1] == "normal" || $argv[1] == "longrun") {
-        $generator->shoot();
-    }
-
-    if ($argv[1] == "image") {
-        $generator->convert();
-    }
-}else
+if($sleep > 0)
 {
-	echo "sleeping for a random time (fallback)\n";
-	sleep(mt_rand(5, 30));
+    echo "sleeping for " . $sleep . " seconds.\n";
+	sleep($sleep);
 }
