@@ -29,6 +29,7 @@ require_once(DIRECTORY_ROOT . '/config/config.inc.php');
 
 use ThumbSniper\agent\Generator;
 use ThumbSniper\agent\Settings;
+use ThumbSniper\shared\Target;
 
 
 function get_url($url) {
@@ -55,33 +56,30 @@ $generator = new Generator($argv[1]);
 
 $jsonTargetData = get_url($generator->target_next);
 
-//print_r($jsonTargetData);
+$target = null;
 
 if(is_numeric($jsonTargetData))
 {
     $sleepDuration = intval($jsonTargetData);
     echo "sleeping for " . $sleepDuration . " seconds\n";
     sleep($sleepDuration);
-}elseif(!empty($jsonTargetData))
-{
-	$target_serialized = base64_decode($jsonTargetData, true);
-	$target = unserialize($target_serialized);
+}elseif(!empty($jsonTargetData)) {
+    $target_serialized = base64_decode($jsonTargetData, true);
+    $target = unserialize($target_serialized);
+}
 
-	//print_r($target);
+if($target instanceof Target) {
+    $generator->setTarget($target);
 
-	$generator->setTarget($target);
+    if ($argv[1] == "normal" || $argv[1] == "longrun") {
+        $generator->shoot();
+    }
 
-	if($argv[1] == "normal" || $argv[1] == "longrun")
-	{
-		$generator->shoot();
-	}
-
-	if($argv[1] == "image")
-	{
-		$generator->convert();
-	}
+    if ($argv[1] == "image") {
+        $generator->convert();
+    }
 }else
 {
 	echo "sleeping for a random time (fallback)\n";
-	sleep(mt_rand(1, 5));
+	sleep(mt_rand(5, 30));
 }
