@@ -62,7 +62,7 @@ $sleep = 0;
 if(is_numeric($jsonTargetData))
 {
     $sleepDuration = intval($jsonTargetData);
-    echo "No pending jobs. Set sleep to " . $sleepDuration . " seconds\n";
+    //echo "No pending jobs. Set sleep to " . $sleepDuration . " seconds\n";
 
     if($sleepDuration > 0)
     {
