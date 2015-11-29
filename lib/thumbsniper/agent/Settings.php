@@ -32,6 +32,12 @@ abstract class Settings
     static private $convertPath = '/usr/bin/convert';
     static private $timeoutPath = '/usr/bin/timeout';
 
+    static private $wkhtmlPath = '/usr/bin/wkhtmltoimage';
+    static private $cutycaptPath = '/usr/bin/cutycapt';
+
+    static private $reflectionLeftToRightPath = '/usr/bin/3Dreflection';
+    static private $reflectionRightToLeftPath = '/usr/bin/3Dreflection_rightToLeft';
+
     static private $masterFiletype = 'png';
 
     static private $imageFiletypes = array(
@@ -390,5 +396,53 @@ abstract class Settings
     public static function setApiAgentSecret($apiAgentSecret)
     {
         self::$apiAgentSecret = $apiAgentSecret;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getWkhtmlPath()
+    {
+        return self::$wkhtmlPath;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getCutycaptPath()
+    {
+        return self::$cutycaptPath;
+    }
+
+    /**
+     * @return boolean
+     */
+    public static function isReflectionLeftToRightPath()
+    {
+        return is_executable(self::$reflectionLeftToRightPath);
+    }
+
+    /**
+     * @return string
+     */
+    public static function getReflectionLeftToRightPath()
+    {
+        return self::$reflectionLeftToRightPath;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getReflectionRightToLeftPath()
+    {
+        return self::$reflectionRightToLeftPath;
+    }
+
+    /**
+     * @return boolean
+     */
+    public static function isReflectionRightToLeftPath()
+    {
+        return is_executable(self::$reflectionRightToLeftPath);
     }
 }

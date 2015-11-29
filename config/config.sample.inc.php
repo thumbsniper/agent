@@ -40,15 +40,3 @@ Settings::setApiUrlTargetFailureNormal('http://api.' . Settings::getDomain() . '
 Settings::setApiUrlTargetFailureLongrun('http://api.' . Settings::getDomain() . '/v3/agent/' . Settings::getApiAgentSecret() . '/master/failure/longrun/');
 
 //Settings::setHttpProxyUrl('http://proxy:3128');
-
-define('BASEDIR', '/opt/thumbsniper');
-
-define('LIB_DIR', BASEDIR . '/lib/');
-
-define('WKHTML', "/usr/bin/wkhtmltoimage");
-define('CUTYCAPT', "/usr/bin/cutycapt");
-
-define('ROTATE', "/usr/bin/3Drotate");
-define('REFLECTION_LEFT_TO_RIGHT', "/usr/bin/3Dreflection");
-define('REFLECTION_RIGHT_TO_LEFT', "/usr/bin/3Dreflection_rightToLeft");
-

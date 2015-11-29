@@ -85,7 +85,7 @@ class Generator
             $javascript = "off";
         }
 
-        $cmd = Settings::getTimeoutPath() . " " . $this->snipe_timeout . " " . CUTYCAPT . "\
+        $cmd = Settings::getTimeoutPath() . " " . $this->snipe_timeout . " " . Settings::getCutycaptPath() . "\
 			--url=\"" . $this->target->getUrl() . "\" \
 			--out=\"" . $output . "\" \
 			--min-width=" . Settings::getScreenWidth() . " \
@@ -116,7 +116,7 @@ class Generator
             $javascript = "disable";
         }
 
-        $cmd = Settings::getTimeoutPath() . " " . $this->snipe_timeout . " " . WKHTML . "\
+        $cmd = Settings::getTimeoutPath() . " " . $this->snipe_timeout . " " . Settings::getWkhtmlPath() . "\
 			--width " . Settings::getScreenWidth() . " \
 			--height " . Settings::getScreenHeight() . " \
 			--crop-w " . Settings::getScreenWidth() . " \
@@ -339,7 +339,7 @@ class Generator
                     case "fade1":
                         if (!file_exists($outputFade1)) {
                             $this->logger("effect fade1 " . $outputFade1);
-                            $effect_exec_cmd = REFLECTION_LEFT_TO_RIGHT . " -f 23 -g 15 " . $output . " " . $outputFade1;
+                            $effect_exec_cmd = Settings::getReflectionLeftToRightPath() . " -f 23 -g 15 " . $output . " " . $outputFade1;
                             //FIXME: out + rc hinzufuegen
                             exec($effect_exec_cmd);
                         }
@@ -349,7 +349,7 @@ class Generator
                     case "fade2":
                         if (!file_exists($outputFade2)) {
                             $this->logger("effect fade2 " . $outputFade2);
-                            $effect_exec_cmd = REFLECTION_RIGHT_TO_LEFT . " -f 23 -g 15 " . $output . " " . $outputFade2;
+                            $effect_exec_cmd = Settings::getReflectionRightToLeftPath() . " -f 23 -g 15 " . $output . " " . $outputFade2;
                             //FIXME: out + rc hinzufuegen
                             exec($effect_exec_cmd);
                         }
