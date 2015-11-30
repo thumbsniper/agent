@@ -32,29 +32,39 @@ use ThumbSniper\agent\Settings;
 use ThumbSniper\shared\Target;
 
 
-function get_url($url) {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+function get_url($url, $featuredEffects)
+{
+    $data = array();
+    $data['featuredEffects'] = $featuredEffects;
+    $jsonData = json_encode($data);
+    $ch = curl_init();
 
-    if(Settings::getHttpProxyUrl())
-    {
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($jsonData))
+    );
+
+    if (Settings::getHttpProxyUrl()) {
         curl_setopt($ch, CURLOPT_PROXY, Settings::getHttpProxyUrl());
     }
 
-        $content = curl_exec($ch);
-        curl_close($ch);
+    $content = curl_exec($ch);
+    curl_close($ch);
 
-        return $content;
+    return $content;
 }
 
 /////////
 
 
 $generator = new Generator($argv[1]);
-
-$jsonTargetData = get_url($generator->target_next);
+$featuredEffects = $generator->getFeaturedEffects();
+$jsonTargetData = get_url($generator->target_next, $featuredEffects);
 
 $target = null;
 $sleep = 0;

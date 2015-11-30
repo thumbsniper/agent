@@ -339,7 +339,7 @@ class Generator
                     case "fade1":
                         if (!file_exists($outputFade1)) {
                             $this->logger("effect fade1 " . $outputFade1);
-                            $effect_exec_cmd = Settings::getReflectionLeftToRightPath() . " -f 23 -g 15 " . $output . " " . $outputFade1;
+                            $effect_exec_cmd = Settings::getEffectsExtraCommand('fade1') . " -f 23 -g 15 " . $output . " " . $outputFade1;
                             //FIXME: out + rc hinzufuegen
                             exec($effect_exec_cmd);
                         }
@@ -349,7 +349,7 @@ class Generator
                     case "fade2":
                         if (!file_exists($outputFade2)) {
                             $this->logger("effect fade2 " . $outputFade2);
-                            $effect_exec_cmd = Settings::getReflectionRightToLeftPath() . " -f 23 -g 15 " . $output . " " . $outputFade2;
+                            $effect_exec_cmd = Settings::getEffectsExtraCommand('fade2') . " -f 23 -g 15 " . $output . " " . $outputFade2;
                             //FIXME: out + rc hinzufuegen
                             exec($effect_exec_cmd);
                         }
@@ -631,5 +631,27 @@ class Generator
         curl_close($ch);
 
         return $result;
+    }
+
+
+    public function getFeaturedEffects()
+    {
+        $features = Settings::getEffectsBuiltin();
+
+        if(!is_array($features))
+        {
+            $features = array();
+        }
+
+        foreach(Settings::getEffectsExtraCommands() as $effect)
+        {
+            $cmd = Settings::getEffectsExtraCommand($effect);
+            if($cmd)
+            {
+                $features[] = $effect;
+            }
+        }
+
+        return $features;
     }
 }

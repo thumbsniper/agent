@@ -52,6 +52,21 @@ abstract class Settings
         'polaroid1' => 'png'
     );
 
+    static private $effectsBuiltin = array(
+        'plain',
+        'button1',
+        'curly',
+        'blur1',
+        'blur2',
+        'tornpaper1',
+        'polaroid1'
+    );
+
+    static private $effectsExtraCommands = array(
+        'fade1' => '/usr/bin/3Dreflection',
+        'fade2' => '/usr/bin/3Dreflection_rightToLeft'
+    );
+
     static private $domain;
 
     static private $apiAgentSecret;
@@ -414,35 +429,33 @@ abstract class Settings
         return self::$cutycaptPath;
     }
 
-    /**
-     * @return boolean
-     */
-    public static function isReflectionLeftToRightPath()
+
+    public static function getEffectsExtraCommand($effect)
     {
-        return is_executable(self::$reflectionLeftToRightPath);
+        if(array_key_exists($effect, self::$effectsExtraCommands))
+        {
+            if(is_executable(self::$effectsExtraCommands[$effect]))
+            {
+                return self::$effectsExtraCommands[$effect];
+            }
+        }
+
+        return null;
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public static function getReflectionLeftToRightPath()
+    public static function getEffectsBuiltin()
     {
-        return self::$reflectionLeftToRightPath;
+        return self::$effectsBuiltin;
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public static function getReflectionRightToLeftPath()
+    public static function getEffectsExtraCommands()
     {
-        return self::$reflectionRightToLeftPath;
-    }
-
-    /**
-     * @return boolean
-     */
-    public static function isReflectionRightToLeftPath()
-    {
-        return is_executable(self::$reflectionRightToLeftPath);
+        return self::$effectsExtraCommands;
     }
 }
