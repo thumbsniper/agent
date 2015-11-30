@@ -643,7 +643,7 @@ class Generator
             $features = array();
         }
 
-        foreach(Settings::getEffectsExtraCommands() as $effect)
+        foreach(array_keys(Settings::getEffectsExtraCommands()) as $effect)
         {
             $cmd = Settings::getEffectsExtraCommand($effect);
             if($cmd)

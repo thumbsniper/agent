@@ -32,7 +32,25 @@ use ThumbSniper\agent\Settings;
 use ThumbSniper\shared\Target;
 
 
-function get_url($url, $featuredEffects)
+function get_url($url) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+
+    if(Settings::getHttpProxyUrl())
+    {
+        curl_setopt($ch, CURLOPT_PROXY, Settings::getHttpProxyUrl());
+    }
+
+    $content = curl_exec($ch);
+    curl_close($ch);
+
+    return $content;
+}
+
+
+function get_url_post($url, $featuredEffects)
 {
     $data = array();
     $data['featuredEffects'] = $featuredEffects;
@@ -63,8 +81,13 @@ function get_url($url, $featuredEffects)
 
 
 $generator = new Generator($argv[1]);
-$featuredEffects = $generator->getFeaturedEffects();
-$jsonTargetData = get_url($generator->target_next, $featuredEffects);
+
+if($argv[1] == "image") {
+    $featuredEffects = $generator->getFeaturedEffects();
+    $jsonTargetData = get_url_post($generator->target_next, $featuredEffects);
+}else {
+    $jsonTargetData = get_url($generator->target_next);
+}
 
 $target = null;
 $sleep = 0;
