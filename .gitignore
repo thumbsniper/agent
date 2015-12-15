@@ -1,5 +1,4 @@
 .idea
 composer.lock
 vendor/
-config/config.inc.php
-
+config/agent-config.inc.php

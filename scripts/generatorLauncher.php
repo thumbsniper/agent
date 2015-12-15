@@ -25,7 +25,7 @@ if(!isset($argv[1]))
 define('DIRECTORY_ROOT', dirname(__DIR__));
 
 require_once(DIRECTORY_ROOT . '/vendor/autoload.php');
-require_once(DIRECTORY_ROOT . '/config/config.inc.php');
+require_once(DIRECTORY_ROOT . '/config/agent-config.inc.php');
 
 use ThumbSniper\agent\Generator;
 use ThumbSniper\agent\Settings;
