@@ -35,6 +35,9 @@ abstract class Settings
     static private $wkhtmlPath = '/usr/bin/wkhtmltoimage';
     static private $cutycaptPath = '/usr/bin/cutycapt';
 
+    static private $reflectionLeftToRightPath = DIRECTORY_ROOT . '/ext/3Dreflection';
+    static private $reflectionRightToLeftPath = DIRECTORY_ROOT . '/ext/3Dreflection_rightToLeft';
+
     static private $masterFiletype = 'png';
 
     static private $imageFiletypes = array(
@@ -60,8 +63,8 @@ abstract class Settings
     );
 
     static private $effectsExtraCommands = array(
-        'fade1' => DIRECTORY_ROOT . '/scripts/3Dreflection',
-        'fade2' => DIRECTORY_ROOT . '/scripts/3Dreflection_rightToLeft'
+        'fade1' => DIRECTORY_ROOT . '/ext/3Dreflection',
+        'fade2' => DIRECTORY_ROOT . '/ext/3Dreflection_rightToLeft'
     );
 
     static private $domain;
