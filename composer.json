@@ -16,7 +16,7 @@
     "psr-4": {"ThumbSniper\\": "lib/thumbsniper/"}
   },
   "require": {
-    "thumbsniper/shared-libs": "v0.8.5"
+    "thumbsniper/shared-libs": "v0.8.6"
   }
 }
 
