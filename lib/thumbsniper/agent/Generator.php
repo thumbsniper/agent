@@ -455,6 +455,9 @@ class Generator
                     $base64 = chunk_split(base64_encode($imageData));
                     $image->setImageData($base64);
                     $image->setTsLastUpdated(time());
+                    $imageSize = getimagesize($imageVariant);
+                    $image->setHeight($imageSize[1]);
+                    $this->logger("height: " . $image->getHeight());
                     $newImages[] = $image;
                 }
             }
