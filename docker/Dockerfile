@@ -61,7 +61,7 @@ RUN /usr/sbin/useradd -u 999 -g 999 -c tagent -m -s /bin/bash tagent
 
 COPY etc/php5 /etc/php5
 
-RUN git clone -b v0.9.3 https://github.com/thumbsniper/agent.git /opt/thumbsniper
+RUN git clone -b master https://github.com/thumbsniper/agent.git /opt/thumbsniper
 
 RUN composer --working-dir=/opt/thumbsniper update
 
