@@ -102,10 +102,9 @@ if(is_numeric($jsonTargetData))
         $sleep = $sleepDuration;
     }
 }elseif(!empty($jsonTargetData)) {
-    $target_serialized = base64_decode($jsonTargetData, true);
-    $target = unserialize($target_serialized);
+    $target = json_decode($jsonTargetData, true);
 
-    if($target instanceof Target) {
+    if(is_array($target)) {
         $generator->setTarget($target);
 
         if ($argv[1] == "normal" || $argv[1] == "longrun") {

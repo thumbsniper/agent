@@ -27,7 +27,7 @@ class Generator
 {
     private $id;
 
-    /** @var Target */
+    /** @var array */
     private $target;
 
     private $mode;
@@ -57,7 +57,7 @@ class Generator
     }
 
 
-    public function setTarget(Target $target)
+    public function setTarget(array $target)
     {
         $this->target = $target;
         return true;
@@ -79,14 +79,14 @@ class Generator
 
     private function getCutyCaptCommand($output)
     {
-        if ($this->target->isJavaScriptEnabled()) {
+        if ($this->target['javaScriptEnabled']) {
             $javascript = "on";
         } else {
             $javascript = "off";
         }
 
         $cmd = Settings::getTimeoutPath() . " " . $this->snipe_timeout . " " . Settings::getCutycaptPath() . "\
-			--url=\"" . $this->target->getUrl() . "\" \
+			--url=\"" . $this->target['url'] . "\" \
 			--out=\"" . $output . "\" \
 			--min-width=" . Settings::getScreenWidth() . " \
 			--min-height=" . Settings::getScreenHeight() . " \
@@ -110,7 +110,7 @@ class Generator
 
     private function getWkhtmlCommand($output)
     {
-        if ($this->target->isJavaScriptEnabled()) {
+        if ($this->target['javaScriptEnabled']) {
             $javascript = "enable";
         } else {
             $javascript = "disable";
@@ -135,7 +135,7 @@ class Generator
             $cmd.= '--proxy "' . Settings::getHttpProxyUrl() . '" ';
         }
 
-        $cmd.= $this->target->getUrl() . " " . $output; // . " > /dev/null 2>&1";
+        $cmd.= $this->target['url'] . " " . $output; // . " > /dev/null 2>&1";
 
         return $cmd;
     }
@@ -146,37 +146,37 @@ class Generator
             $this->logger("no target!");
             return false;
         } else {
-            $this->id = $this->target->getId();
+            $this->id = $this->target['id'];
         }
 
-        $this->logger("target: " . $this->target->getUrl() . " (" . $this->target->getId() . ")");
+        $this->logger("target: " . $this->target['url'] . " (" . $this->target['id'] . ")");
 
-        $urlparts = parse_url($this->target->getUrl());
+        $urlparts = parse_url($this->target['url']);
 
         if (!Helpers::isIpAddress($urlparts['host']) && !Helpers::isDomainExists($urlparts['host'])) {
             $this->logger("Host " . $urlparts['host'] . " has no DNS RR");
             // setting robotsAllowed and tsRobotsCheck to null to show the API that there was really an error
-            $this->target->setRobotsAllowed(null);
-            $this->target->setTsRobotsCheck(null);
+            $this->target['robotsAllowed'] = null;
+            $this->target['tsRobotsCheck'] = null;
             $this->failure("Host has no DNS resource record");
             return false;
         }
 
-        $robotsAllowed = RobotsChecker::isAllowed($this->target->getUrl());
+        $robotsAllowed = RobotsChecker::isAllowed($this->target['url']);
 
         if (!$robotsAllowed) {
             $this->logger("FORBIDDEN by robots.txt");
-            $this->target->setRobotsAllowed(false);
-            $this->target->setTsRobotsCheck(time());
+            $this->target['robotsAllowed'] = false;
+            $this->target['tsRobotsCheck'] = time();
             $this->failure("Access to URL is forbidden by /robots.txt");
             return false;
         } else {
             $this->logger("allowed by robots.txt");
-            $this->target->setRobotsAllowed(true);
-            $this->target->setTsRobotsCheck(time());
+            $this->target['robotsAllowed'] = true;
+            $this->target['tsRobotsCheck'] = time();
         }
 
-        $urlAvailable = $this->isUrlAvailable($this->target->getUrl(), true);
+        $urlAvailable = $this->isUrlAvailable($this->target['url'], true);
         if(!$urlAvailable['success'])
         {
             $this->logger("URL unavailable: " . $urlAvailable['message']);
@@ -184,7 +184,7 @@ class Generator
             return false;
         }else {
             if(array_key_exists("mime", $urlAvailable) && $urlAvailable['mime']) {
-                $this->target->setMimeType($urlAvailable['mime']);
+                $this->target['mimeType'] = $urlAvailable['mime'];
             }
         }
 
@@ -192,22 +192,22 @@ class Generator
             die(Settings::getCacheDir() . " missing");
         }
 
-        $tmpDir = Settings::getCacheDir() . "/" . getmypid() . "." . $this->target->getFileNameBase();
+        $tmpDir = Settings::getCacheDir() . "/" . getmypid() . "." . $this->target['fileNameBase'];
 
         if (!is_dir($tmpDir)) {
             mkdir($tmpDir, 0755);
         }
 
-        $output = $tmpDir . "/" . $this->target->getFileName();
+        $output = $tmpDir . "/" . $this->target['fileNameBase'] . '.' . $this->target['fileNameSuffix'];
 
         $this->logger("loading website");
 
-        $this->target->setSnipeDuration(NULL);
+        $this->target['snipeDuration'] = null;
 
         $exec_cmd = false;
-        $this->logger("javascript " . $this->target->isJavaScriptEnabled());
+        $this->logger("javascript " . $this->target['javaScriptEnabled']);
 
-        switch ($this->target->getWeapon()) {
+        switch ($this->target['weapon']) {
             case "cutycapt":
                 $exec_cmd = $this->getCutyCaptCommand($output);
                 break;
@@ -217,7 +217,7 @@ class Generator
                 break;
         }
 
-        $this->logger("weapon: " . $this->target->getWeapon());
+        $this->logger("weapon: " . $this->target['weapon']);
         $this->logger("output: " . $output);
 
         $exec_out = array();
@@ -246,11 +246,11 @@ class Generator
         $crop_exec_rc = null;
         exec($crop_exec_cmd, $crop_exec_out, $crop_exec_rc);
 
-        if($this->target->isCensored())
+        if($this->target['censored'])
         {
             $this->logger("censoring master image");
 
-            $censored = $tmpDir . "/" . $this->target->getFileName() . '_censored';
+            $censored = $tmpDir . "/" . $this->target['fileNameBase'] . '.' . $this->target['fileNameSuffix'] . '_censored';
             $convert_exec_cmd = Settings::getConvertPath() . " -blur 0x3 " . $output . " " . $censored;
             //FIXME: out + rc hinzufuegen,
             exec($convert_exec_cmd);
@@ -258,9 +258,9 @@ class Generator
         }
 
 
-        $this->target->setMasterImage($this->getMasterImageData($output));
+        $this->target['masterImage'] = $this->getMasterImageData($output);
         //$this->target->setTsLastUpdated(time());
-        $this->target->setSnipeDuration($exec_end - $exec_start);
+        $this->target['snipeDuration'] = $exec_end - $exec_start;
 
         $this->commit();
         $this->cleanup($tmpDir);
@@ -294,20 +294,20 @@ class Generator
 
     public function convert()
     {
-        if($this->target instanceof Target && $this->target->getId())
+        if(is_array($this->target && array_key_exists('id', $this->target)))
         {
-            $this->id = $this->target->getId();
+            $this->id = $this->target['id'];
         }
-        $this->logger("target: " . $this->target->getUrl());
+        $this->logger("target: " . $this->target['url']);
 
-        $tmpDir = Settings::getCacheDir() . "/" . getmypid() . "." . $this->target->getFileNameBase();
+        $tmpDir = Settings::getCacheDir() . "/" . getmypid() . "." . $this->target['fileNameBase'];
 
         if (!is_dir($tmpDir)) {
             mkdir($tmpDir, 0755);
         }
 
-        $output = $tmpDir . "/" . $this->target->getFileName();
-        $this->saveMasterImageData($this->target->getMasterImage(), $output);
+        $output = $tmpDir . "/" . $this->target['fileNameBase'] . '.' . $this->target['fileNameSuffix'];
+        $this->saveMasterImageData($this->target['masterImage'], $output);
 
         //TODO: check if masterImage exists
 
@@ -316,26 +316,26 @@ class Generator
         $crop_exec_rc = null;
         exec($crop_exec_cmd, $crop_exec_out, $crop_exec_rc);
 
-        $outputFade1 = $tmpDir . "/" . $this->target->getFileNameBase() . "_fade1." . Settings::getImageFiletype("fade1");
-        $outputFade2 = $tmpDir . "/" . $this->target->getFileNameBase() . "_fade2." . Settings::getImageFiletype("fade2");
-        $outputButton1 = $tmpDir . "/" . $this->target->getFileNameBase() . "_button1." . Settings::getImageFiletype("button1");
-        $outputCurly = $tmpDir . "/" . $this->target->getFileNameBase() . "_curly." . Settings::getImageFiletype("curly");
-        $outputBlur1 = $tmpDir . "/" . $this->target->getFileNameBase() . "_blur1." . Settings::getImageFiletype("blur1");
-        $outputBlur2 = $tmpDir . "/" . $this->target->getFileNameBase() . "_blur2." . Settings::getImageFiletype("blur2");
-        $outputTornPaper1 = $tmpDir . "/" . $this->target->getFileNameBase() . "_tornpaper1." . Settings::getImageFiletype("tornpaper1");
-        $outputPolaroid1 = $tmpDir . "/" . $this->target->getFileNameBase() . "_polaroid1." . Settings::getImageFiletype("polaroid1");
+        $outputFade1 = $tmpDir . "/" . $this->target['fileNameBase'] . "_fade1." . Settings::getImageFiletype("fade1");
+        $outputFade2 = $tmpDir . "/" . $this->target['fileNameBase'] . "_fade2." . Settings::getImageFiletype("fade2");
+        $outputButton1 = $tmpDir . "/" . $this->target['fileNameBase'] . "_button1." . Settings::getImageFiletype("button1");
+        $outputCurly = $tmpDir . "/" . $this->target['fileNameBase'] . "_curly." . Settings::getImageFiletype("curly");
+        $outputBlur1 = $tmpDir . "/" . $this->target['fileNameBase'] . "_blur1." . Settings::getImageFiletype("blur1");
+        $outputBlur2 = $tmpDir . "/" . $this->target['fileNameBase'] . "_blur2." . Settings::getImageFiletype("blur2");
+        $outputTornPaper1 = $tmpDir . "/" . $this->target['fileNameBase'] . "_tornpaper1." . Settings::getImageFiletype("tornpaper1");
+        $outputPolaroid1 = $tmpDir . "/" . $this->target['fileNameBase'] . "_polaroid1." . Settings::getImageFiletype("polaroid1");
 
         $newImages = array();
 
         try {
-            /** @var $image Image */
-            foreach ($this->target->getImages() as $image) {
+            /** @var $image array */
+            foreach ($this->target['images'] as $image) {
 
-                $this->logger("convert: " . $image->getEffect() . " - " . $image->getWidth());
+                $this->logger("convert: " . $image['effect'] . " - " . $image['width']);
 
-                $this->id = $image->getId();
+                $this->id = $image['id'];
 
-                switch ($image->getEffect()) {
+                switch ($image['effect']) {
                     case "fade1":
                         if (!file_exists($outputFade1)) {
                             $this->logger("effect fade1 " . $outputFade1);
@@ -441,9 +441,9 @@ class Generator
                         break;
                 }
 
-                $imageVariant = $tmpDir . "/" . $this->target->getFileNameBase() . $image->getFileNameSuffix() . "." . Settings::getImageFiletype($image->getEffect());
-                $convert_exec_cmd = Settings::getConvertPath() . " " . $useOutput . " -resize " . " " . $image->getWidth() . " " . $imageVariant;
-                $this->logger("resize " . $image->getEffect() . " " . $imageVariant);
+                $imageVariant = $tmpDir . "/" . $this->target['fileNameBase'] . $image['fileNameSuffix'] . "." . Settings::getImageFiletype($image['effect']);
+                $convert_exec_cmd = Settings::getConvertPath() . " " . $useOutput . " -resize " . " " . $image['width'] . " " . $imageVariant;
+                $this->logger("resize " . $image['effect'] . " " . $imageVariant);
                 //FIXME: out + rc hinzufuegen,
                 exec($convert_exec_cmd);
 
@@ -453,11 +453,11 @@ class Generator
                     $imageData = fread($fp, filesize($imageVariant));
                     fclose($fp);
                     $base64 = chunk_split(base64_encode($imageData));
-                    $image->setImageData($base64);
-                    $image->setTsLastUpdated(time());
+                    $image['imageData'] = $base64;
+                    $image['tsLastUpdated'] = time();
                     $imageSize = getimagesize($imageVariant);
-                    $image->setHeight($imageSize[1]);
-                    $this->logger("height: " . $image->getHeight());
+                    $image['height'] = $imageSize[1];
+                    $this->logger("height: " . $image['height']);
                     $newImages[] = $image;
                 }
             }
@@ -466,7 +466,7 @@ class Generator
         }
 
         if ($newImages) {
-            $this->target->setImages($newImages);
+            $this->target['images'] = $newImages;
             //TODO: commit also if masterImage was successful?
             $this->commitImage();
         } else {
@@ -520,7 +520,7 @@ class Generator
     private function failure($errorMessage)
     {
         $this->logger("sending results (failure)");
-        $this->target->setLastErrorMessage($errorMessage);
+        $this->target['lastErrorMessage'] = $errorMessage;
 
         switch($this->mode)
         {
@@ -541,9 +541,8 @@ class Generator
 
 
     private function sendResults($url)
-    {
-        $target_serialized = serialize($this->target);
-        $jsonData = base64_encode($target_serialized);
+    {        
+        $jsonData = json_encode($this->target);
 
         $postData = "data=" . urlencode($jsonData);
 //		$postData = "data=" . $jsonData;
