@@ -8,7 +8,7 @@
     {
       "name": "Thomas Schulte",
       "email": "thomas@cupracer.de",
-      "homepage": "https://www.mynakedgirlfriend.de",
+      "homepage": "https://cupracer.de",
       "role": "Project founder"
     }
   ],
@@ -16,7 +16,7 @@
     "psr-4": {"ThumbSniper\\": "lib/thumbsniper/"}
   },
   "require": {
-    "thumbsniper/shared-libs": "v0.8.8"
+    "thumbsniper/shared-libs": "v0.9.1"
   }
 }
 
