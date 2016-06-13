@@ -1,6 +1,7 @@
-"use strict"
+"use strict";
 
-var RenderTarget, GetBaseUrl, RenderPageIfRobotsAllowed, target, GetUrlPath, CheckRobotsTxt, GetThumbnailJob, IsJQuery, GetPageProperties;
+var RenderTarget, GetBaseUrl, RenderPageIfRobotsAllowed, target, GetUrlPath, CheckRobotsTxt, GetThumbnailJob, IsJQuery,
+    GetPageProperties, DoRender, Finalize, SendResults, RenderTargetCallback;
 
 var system = require('system');
 var args = system.args;
@@ -48,7 +49,7 @@ GetUrlPath = function(url) {
 
 CheckRobotsTxt = function(content, path) {
     var robotsTxtSplit = content.split('\n');
-    var rules = new Array();
+    var rules = [];
     var recordRules = false;
 
     for(var i = 0; i < robotsTxtSplit.length; i++) {
@@ -78,8 +79,8 @@ CheckRobotsTxt = function(content, path) {
     if(rules.length > 0) {
         var currentStrength = 0;
 
-        for(var i = 0; i < rules.length; i++) {
-            var rulePair = rules[i];
+        for(var a = 0; a < rules.length; a++) {
+            var rulePair = rules[a];
 
             if(path.substring(0, rulePair.path.length) == rulePair.path) {
                 console.log("robots.txt match: " + path + " => " + rulePair.path + " (" + rulePair.rule + ")");
@@ -235,15 +236,15 @@ IsJQuery = function(page) {
 };
 
 
-var DoRender = function(callback, page, target) {
+DoRender = function(callback, page, target) {
     var ts = Date.now();
 
-    var result = page.open(target.url, function(status) {
+    return page.open(target.url, function(status) {
         try {
             console.log("run page.open function");
 
             if(status === "success") {
-                ts = Date.now() - ts;
+                ts = (Date.now() - ts) / 1000;
 
                 target = GetPageProperties(page, target);
                 target['snipeDuration'] = ts;
@@ -276,12 +277,10 @@ var DoRender = function(callback, page, target) {
             return Finalize(callback, "error", target)
         }
     });
-
-    return result;
 };
 
 
-var Finalize = function(callback, status, target) {
+Finalize = function(callback, status, target) {
     console.log("run Finalize function");
     callback(status, target);
 };
@@ -325,7 +324,7 @@ RenderTarget = function(target, callback) {
 };
 
 
-var SendResults = function(jobStatus, target, nextSleep) {
+SendResults = function(jobStatus, target, nextSleep) {
     console.log("SendResults start");
 
     var webPage = require('webpage');
@@ -351,7 +350,7 @@ var SendResults = function(jobStatus, target, nextSleep) {
     return page.open(resultsUrl, settings, function(status) {
         try {
             console.log('Status: ' + status);
-            // Do other things here...
+            console.log(page.plainText);
             page.close();
         }catch(e) {
             console.log("Exception: " + e);
@@ -363,7 +362,7 @@ var SendResults = function(jobStatus, target, nextSleep) {
 };
 
 
-var RenderTargetCallback = function(status, target) {
+RenderTargetCallback = function(status, target) {
     if(status === "success") {
         console.log("=============");
         console.log("Results:");
