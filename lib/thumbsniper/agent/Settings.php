@@ -72,12 +72,15 @@ abstract class Settings
     static private $apiAgentSecret;
     static private $apiUrlTargetNormal;
     static private $apiUrlTargetLongrun;
+    static private $apiUrlTargetPhantom;
     static private $apiUrlImage;
     static private $apiUrlTargetCommitNormal;
     static private $apiUrlTargetCommitLongrun;
+    static private $apiUrlTargetCommitPhantom;
     static private $apiUrlImageCommit;
     static private $apiUrlTargetFailureNormal;
     static private $apiUrlTargetFailureLongrun;
+    static private $apiUrlTargetFailurePhantom;
 
     static private $screenWidth = 1024;
     static private $screenHeight = 768;
@@ -457,5 +460,53 @@ abstract class Settings
     public static function getEffectsExtraCommands()
     {
         return self::$effectsExtraCommands;
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getApiUrlTargetPhantom()
+    {
+        return self::$apiUrlTargetPhantom;
+    }
+
+    /**
+     * @param mixed $apiUrlTargetPhantom
+     */
+    public static function setApiUrlTargetPhantom($apiUrlTargetPhantom)
+    {
+        self::$apiUrlTargetPhantom = $apiUrlTargetPhantom;
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getApiUrlTargetCommitPhantom()
+    {
+        return self::$apiUrlTargetCommitPhantom;
+    }
+
+    /**
+     * @param mixed $apiUrlTargetCommitPhantom
+     */
+    public static function setApiUrlTargetCommitPhantom($apiUrlTargetCommitPhantom)
+    {
+        self::$apiUrlTargetCommitPhantom = $apiUrlTargetCommitPhantom;
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getApiUrlTargetFailurePhantom()
+    {
+        return self::$apiUrlTargetFailurePhantom;
+    }
+
+    /**
+     * @param mixed $apiUrlTargetFailurePhantom
+     */
+    public static function setApiUrlTargetFailurePhantom($apiUrlTargetFailurePhantom)
+    {
+        self::$apiUrlTargetFailurePhantom = $apiUrlTargetFailurePhantom;
     }
 }

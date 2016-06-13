@@ -13,7 +13,7 @@ export DISPLAY=:1000
 while :; do
     if [ "${TAGENT_QUEUE}" == "phantom" ]; then
         echo "starting new PhantomJS instance"
-        /opt/phantomjs/bin/phantomjs /opt/thumbsniper/scripts/render.js 10
+        /usr/bin/php -f /opt/thumbsniper/scripts/phantomLauncher.php
     elif [ "${TAGENT_QUEUE}" == "normal" ] || [ "${TAGENT_QUEUE}" == "longrun" ]; then
 		XVFBPID=$(pidof Xvfb)
         if [ -z "$XVFBPID" ]; then

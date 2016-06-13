@@ -61,6 +61,7 @@ RUN /usr/sbin/groupadd -g 999 tagent
 RUN /usr/sbin/useradd -u 999 -g 999 -c tagent -m -s /bin/bash tagent
 
 ADD https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2 /tmp
+#COPY phantomjs-2.1.1-linux-x86_64.tar.bz2 /tmp
 RUN mkdir /opt/phantomjs && tar xf /tmp/phantomjs-2.1.1-linux-x86_64.tar.bz2 --strip 1 -C /opt/phantomjs
 
 COPY etc/php5 /etc/php5

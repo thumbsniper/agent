@@ -32,11 +32,14 @@ Settings::setUserAgentUrl("http://example.com");
 
 Settings::setApiUrlTargetNormal('http://api.' . Settings::getDomain() . '/v3/agent/' . Settings::getApiAgentSecret() . '/master/job/normal/');
 Settings::setApiUrlTargetLongrun('http://api.' . Settings::getDomain() . '/v3/agent/' . Settings::getApiAgentSecret() . '/master/job/longrun/');
+Settings::setApiUrlTargetPhantom('http://api.' . Settings::getDomain() . '/v3/agent/' . Settings::getApiAgentSecret() . '/master/job/phantom/');
 Settings::setApiUrlImage('http://api.' . Settings::getDomain() . '/v3/agent/' . Settings::getApiAgentSecret() . '/thumbnail/job/');
 Settings::setApiUrlTargetCommitNormal('http://api.' . Settings::getDomain() . '/v3/agent/' . Settings::getApiAgentSecret() . '/master/commit/normal/');
 Settings::setApiUrlTargetCommitLongrun('http://api.' . Settings::getDomain() . '/v3/agent/' . Settings::getApiAgentSecret() . '/master/commit/longrun/');
+Settings::setApiUrlTargetCommitPhantom('http://api.' . Settings::getDomain() . '/v3/agent/' . Settings::getApiAgentSecret() . '/master/commit/phantom/');
 Settings::setApiUrlImageCommit('http://api.' . Settings::getDomain() . '/v3/agent/' . Settings::getApiAgentSecret() . '/thumbnail/commit/');
 Settings::setApiUrlTargetFailureNormal('http://api.' . Settings::getDomain() . '/v3/agent/' . Settings::getApiAgentSecret() . '/master/failure/normal/');
 Settings::setApiUrlTargetFailureLongrun('http://api.' . Settings::getDomain() . '/v3/agent/' . Settings::getApiAgentSecret() . '/master/failure/longrun/');
+Settings::setApiUrlTargetFailurePhantom('http://api.' . Settings::getDomain() . '/v3/agent/' . Settings::getApiAgentSecret() . '/master/failure/phantom/');
 
 //Settings::setHttpProxyUrl('http://proxy:3128');

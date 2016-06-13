@@ -1,18 +1,17 @@
 "use strict"
 
-var RenderTarget, GetBaseUrl, IsRobotsAllowed, RenderPageIfRobotsAllowed, target, GetUrlPath, CheckRobotsTxt, GetThumbnailJob, IsJQuery, GetPageProperties;
+var RenderTarget, GetBaseUrl, RenderPageIfRobotsAllowed, target, GetUrlPath, CheckRobotsTxt, GetThumbnailJob, IsJQuery, GetPageProperties;
 
 var system = require('system');
 var args = system.args;
 
 var userAgent = "Phantom.js bot";
-var jobUrl = 'http://ser4.de/phantom/target.php';
-var resultsSuccessUrl = 'http://ser4.de/phantom/result.php';
-var resultsFailureUrl = 'http://ser4.de/phantom/result.php';
 
 var loopCount = 0;
 var maxRuns = 0;
 var serverUrl;
+var resultsSuccessUrl;
+var resultsFailureUrl;
 
 var finalUrl;
 var finalResponse;
@@ -37,14 +36,14 @@ GetBaseUrl = function(url) {
     var protocol = pathArray[0];
     var host = pathArray[2];
     return protocol + '//' + host + '/';
-}
+};
 
 
 GetUrlPath = function(url) {
     var baseUrl = GetBaseUrl(url);
     var path = url.replace(baseUrl, "/");
     return path !== "" ? path : "/";
-}
+};
 
 
 CheckRobotsTxt = function(content, path) {
@@ -54,6 +53,7 @@ CheckRobotsTxt = function(content, path) {
 
     for(var i = 0; i < robotsTxtSplit.length; i++) {
         var line = robotsTxtSplit[i].trim();
+        var rulePath;
 
         if(line && line.substring(0, 1) !== "#") {
             if(line.substring(0, 11) === "User-agent:") {
@@ -64,10 +64,10 @@ CheckRobotsTxt = function(content, path) {
                     recordRules = false;
                 }
             }else if(line.substring(0, 9) === "Disallow:" && recordRules) {
-                var rulePath = line.replace(line.substring(0, 9), '').trim();
+                rulePath = line.replace(line.substring(0, 9), '').trim();
                 rules.push({ "rule":"Disallow", "path":rulePath });
             }else if(line.substring(0, 6) === "Allow:" && recordRules) {
-                var rulePath = line.replace(line.substring(0, 6), '').trim();
+                rulePath = line.replace(line.substring(0, 6), '').trim();
                 rules.push({"rule":"Allow", "path":rulePath});
             }
         }
@@ -86,7 +86,7 @@ CheckRobotsTxt = function(content, path) {
                 var strength = rulePair.path.length;
                 if(currentStrength < strength) {
                     currentStrength = strength;
-                    isAllowed = (rulePair.rule === 'Allow') ? true : false;
+                    isAllowed = (rulePair.rule === 'Allow');
                 }else if(currentStrength == strength && rulePair.rule === 'Allow') {
                     isAllowed = true;
                 }
@@ -96,11 +96,11 @@ CheckRobotsTxt = function(content, path) {
 
     console.log("robots.txt result: " + isAllowed);
     return isAllowed;
-}
+};
 
 
 GetThumbnailJob = function(timeout) {
-    console.log("")
+    console.log("");
 
     if(loopCount >= maxRuns) {
         console.log("exiting gracefully after " + loopCount + " runs.");
@@ -143,7 +143,7 @@ GetThumbnailJob = function(timeout) {
             }
         });
     }, timeout * 1000);
-}
+};
 
 
 RenderPageIfRobotsAllowed = function(callback, page, target) {
@@ -180,7 +180,7 @@ RenderPageIfRobotsAllowed = function(callback, page, target) {
             return DoRender(callback, page, target);
         }
     });
-}
+};
 
 
 GetPageProperties = function(page, target) {
@@ -232,7 +232,7 @@ IsJQuery = function(page) {
             return true;
         }
     });
-}
+};
 
 
 var DoRender = function(callback, page, target) {
@@ -278,7 +278,7 @@ var DoRender = function(callback, page, target) {
     });
 
     return result;
-}
+};
 
 
 var Finalize = function(callback, status, target) {
@@ -322,7 +322,7 @@ RenderTarget = function(target, callback) {
     };
 
     return retrieve();
-}
+};
 
 
 var SendResults = function(jobStatus, target, nextSleep) {
@@ -340,10 +340,12 @@ var SendResults = function(jobStatus, target, nextSleep) {
         data: JSON.stringify(target)
     };
 
+    var resultsUrl;
+
     if(jobStatus === "success") {
-        var resultsUrl = resultsSuccessUrl;
+        resultsUrl = resultsSuccessUrl;
     }else {
-        var resultsUrl = resultsFailureUrl;
+        resultsUrl = resultsFailureUrl;
     }
 
     return page.open(resultsUrl, settings, function(status) {
@@ -358,7 +360,7 @@ var SendResults = function(jobStatus, target, nextSleep) {
 
         GetThumbnailJob(nextSleep);
     });
-}
+};
 
 
 var RenderTargetCallback = function(status, target) {
@@ -391,7 +393,7 @@ var RenderTargetCallback = function(status, target) {
 
         SendResults(status, target, 1);
     }
-}
+};
 
 ////////////////////
 
@@ -408,7 +410,23 @@ if(args[2]) {
     serverUrl = args[2];
 }else {
     console.log("missing serverUrl");
-    serverUrl = jobUrl;
+    phantom.exit(1);
+}
+
+if(args[3]) {
+    console.log("setting resultsSuccessUrl = " + args[3]);
+    resultsSuccessUrl = args[3];
+}else {
+    console.log("missing resultsSuccessUrl");
+    phantom.exit(1);
+}
+
+if(args[4]) {
+    console.log("setting resultsFailureUrl = " + args[4]);
+    resultsFailureUrl = args[4];
+}else {
+    console.log("missing resultsFailureUrl");
+    phantom.exit(1);
 }
 
 GetThumbnailJob(0);
