@@ -82,8 +82,8 @@ abstract class Settings
     static private $apiUrlTargetFailureLongrun;
     static private $apiUrlTargetFailurePhantom;
 
-    static private $screenWidth = 1024;
-    static private $screenHeight = 768;
+    static private $screenWidth = 1600;
+    static private $screenHeight = 1200;
     static private $imageQuality = 94;
 
     static private $httpProxyUrl;
