@@ -24,22 +24,41 @@ require_once(DIRECTORY_ROOT . '/config/agent-config.inc.php');
 
 use ThumbSniper\agent\Settings;
 
-$exec_cmd = '/opt/phantomjs/bin/phantomjs /opt/thumbsniper/scripts/render.js 10 ' 
+$cmd = '/opt/phantomjs/bin/phantomjs /opt/thumbsniper/scripts/render.js 3 '
     . '"' . Settings::getApiUrlTargetPhantom() . '" '
     . '"' . Settings::getApiUrlTargetCommitPhantom() . '" '
     . '"' . Settings::getApiUrlTargetFailurePhantom() . '"';
 
-$exec_out = array();
-$exec_rc = null;
+$descriptorspec = array(
+    0 => array("pipe", "r"),   // stdin is a pipe that the child will read from
+    1 => array("pipe", "w"),   // stdout is a pipe that the child will write to
+    2 => array("pipe", "w")    // stderr is a pipe that the child will write to
+);
 
-exec($exec_cmd, $exec_out, $exec_rc);
+flush();
+$process = proc_open($cmd, $descriptorspec, $pipes, realpath('./'), array());
+$exitCode = null;
 
-print_r($exec_out);
+if (is_resource($process)) {
+    try {
+        while ($s = fgets($pipes[1])) {
+            print $s;
+            flush();
+        }
+    }catch (Exception $e) {
+        print $e . "\n";
+    }
+    
+    fclose($pipes[0]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    $exitCode = proc_close($process);
+}
 
-if ($exec_rc != 0) {
-    $this->logger("shoot failed");
+
+if ($exitCode != 0) {
+    $this->logger("PhantomJS failed");
     exit(1);
 }else {
     exit(0);
 }
-
