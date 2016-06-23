@@ -24,7 +24,11 @@ require_once(DIRECTORY_ROOT . '/config/agent-config.inc.php');
 
 use ThumbSniper\agent\Settings;
 
-$cmd = '/opt/phantomjs/bin/phantomjs /opt/thumbsniper/scripts/render.js 3 '
+$cmd = '/opt/phantomjs/bin/phantomjs /opt/thumbsniper/scripts/render.js '
+    . '3 '
+    . '"' . Settings::getScreenWidth() . '" '
+    . '"' . Settings::getScreenHeight() . '" '
+    . '"' . Settings::getUserAgent() . '" '
     . '"' . Settings::getApiUrlTargetPhantom() . '" '
     . '"' . Settings::getApiUrlTargetCommitPhantom() . '" '
     . '"' . Settings::getApiUrlTargetFailurePhantom() . '"';
