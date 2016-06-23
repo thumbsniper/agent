@@ -101,8 +101,6 @@ CheckRobotsTxt = function(content, path) {
 
 
 GetThumbnailJob = function(timeout) {
-    console.log("");
-
     if(loopCount >= maxRuns) {
         console.log("exiting gracefully after " + loopCount + " runs.");
         phantom.exit(0);
@@ -387,9 +385,9 @@ RenderTargetCallback = function(status, target) {
         SendResults(status, target, 0);
     }else {
         console.log("Unable to render '" + target.url + "'");
+        target['error'] = finalResourceError.errorCode + ": " + finalResourceError.errorString;
         console.log(JSON.stringify(target));
-        //console.log(JSON.stringify(finalResourceError));
-
+        
         SendResults(status, target, 1);
     }
 };
