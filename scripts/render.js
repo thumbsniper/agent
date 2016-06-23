@@ -347,8 +347,7 @@ SendResults = function(jobStatus, target, nextSleep) {
 
     return page.open(resultsUrl, settings, function(status) {
         try {
-            console.log('Status: ' + status);
-            console.log(page.plainText);
+            console.log('Status: ' + status + '; Server response: ' + page.plainText);
             page.close();
         }catch(e) {
             console.log("Exception: " + e);
