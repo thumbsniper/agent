@@ -330,7 +330,7 @@ SendResults = function(jobStatus, target, nextSleep) {
 
     var webPage = require('webpage');
     var page = webPage.create();
-    page.settings.userAgent = "Phantom.js";
+    page.settings.userAgent = "PhantomJS (" + hostname + ")";
     var settings = {
         operation: "POST",
         encoding: "utf8",
