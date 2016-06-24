@@ -34,7 +34,11 @@ abstract class Settings
 
     static private $wkhtmlPath = '/usr/bin/wkhtmltoimage';
     static private $cutycaptPath = '/usr/bin/cutycapt';
+    static private $phantomPath = '/opt/phantomjs/bin/phantomjs';
+    static private $phantomScriptPath = '/opt/thumbsniper/scripts/render.js';
 
+    static private $phantomMaxRuns = 10;
+    
     static private $reflectionLeftToRightPath = DIRECTORY_ROOT . '/ext/3Dreflection';
     static private $reflectionRightToLeftPath = DIRECTORY_ROOT . '/ext/3Dreflection_rightToLeft';
 
@@ -508,5 +512,37 @@ abstract class Settings
     public static function setApiUrlTargetFailurePhantom($apiUrlTargetFailurePhantom)
     {
         self::$apiUrlTargetFailurePhantom = $apiUrlTargetFailurePhantom;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getPhantomPath()
+    {
+        return self::$phantomPath;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getPhantomScriptPath()
+    {
+        return self::$phantomScriptPath;
+    }
+
+    /**
+     * @return int
+     */
+    public static function getPhantomMaxRuns()
+    {
+        return self::$phantomMaxRuns;
+    }
+
+    /**
+     * @param int $phantomMaxRuns
+     */
+    public static function setPhantomMaxRuns($phantomMaxRuns)
+    {
+        self::$phantomMaxRuns = $phantomMaxRuns;
     }
 }
