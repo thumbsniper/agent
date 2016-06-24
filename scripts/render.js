@@ -7,6 +7,7 @@ var system = require('system');
 var args = system.args;
 var loopCount = 0;
 
+var hostname = "PhantomJS";
 var maxRuns = 10;
 var screenWidth = 1600;
 var screenHeight = 1200;
@@ -112,11 +113,11 @@ GetThumbnailJob = function(timeout) {
 
     var jobPage = require('webpage');
     var jp = jobPage.create();
-    jp.settings.userAgent = "Phantom.js";
+    jp.settings.userAgent = "PhantomJS (" + hostname + ")";
     jp.onConsoleMessage = function (msg) { console.log(msg); };
 
     setTimeout(function() {
-        console.log("search next thumbnail job");
+        console.log("search next thumbnail job (loopCount: " + loopCount + ")");
 
         jp.open(serverUrl, function(status) {
             try {
@@ -398,44 +399,49 @@ RenderTargetCallback = function(status, target) {
 ////////////////////
 
 if(args[1]) {
-    console.log("setting maxRuns = " + args[1]);
-    maxRuns = args[1];
+    console.log("setting hostname = " + args[1]);
+    hostname = args[1];
 }
 
 if(args[2]) {
-    console.log("setting screenWidth = " + args[2]);
-    screenWidth = args[2];
+    console.log("setting maxRuns = " + args[2]);
+    maxRuns = args[2];
 }
 
 if(args[3]) {
-    console.log("setting screenHeight = " + args[3]);
-    screenHeight = args[3];
+    console.log("setting screenWidth = " + args[3]);
+    screenWidth = args[3];
 }
 
 if(args[4]) {
-    console.log("setting userAgent = " + args[4]);
-    userAgent = args[4];
+    console.log("setting screenHeight = " + args[4]);
+    screenHeight = args[4];
 }
 
 if(args[5]) {
-    console.log("setting serverUrl = " + args[5]);
-    serverUrl = args[5];
+    console.log("setting userAgent = " + args[5]);
+    userAgent = args[5];
+}
+
+if(args[6]) {
+    console.log("setting serverUrl = " + args[6]);
+    serverUrl = args[6];
 }else {
     console.log("missing serverUrl");
     phantom.exit(1);
 }
 
-if(args[6]) {
-    console.log("setting resultsSuccessUrl = " + args[6]);
-    resultsSuccessUrl = args[6];
+if(args[7]) {
+    console.log("setting resultsSuccessUrl = " + args[7]);
+    resultsSuccessUrl = args[7];
 }else {
     console.log("missing resultsSuccessUrl");
     phantom.exit(1);
 }
 
-if(args[7]) {
-    console.log("setting resultsFailureUrl = " + args[7]);
-    resultsFailureUrl = args[7];
+if(args[8]) {
+    console.log("setting resultsFailureUrl = " + args[8]);
+    resultsFailureUrl = args[8];
 }else {
     console.log("missing resultsFailureUrl");
     phantom.exit(1);

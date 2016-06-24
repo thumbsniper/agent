@@ -25,6 +25,7 @@ require_once(DIRECTORY_ROOT . '/config/agent-config.inc.php');
 use ThumbSniper\agent\Settings;
 
 $cmd = Settings::getPhantomPath() . ' ' . Settings::getPhantomScriptPath() . ' '
+    . '"' . gethostname() . '" '
     . '"' . Settings::getPhantomMaxRuns() . '" '
     . '"' . Settings::getScreenWidth() . '" '
     . '"' . Settings::getScreenHeight() . '" '
