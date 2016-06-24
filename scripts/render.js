@@ -386,7 +386,9 @@ RenderTargetCallback = function(status, target) {
         SendResults(status, target, 0);
     }else {
         console.log("Unable to render '" + target.url + "'");
-        target['error'] = finalResourceError.errorCode + ": " + finalResourceError.errorString;
+        if(finalResourceError) {
+            target['error'] = finalResourceError.errorCode + ": " + finalResourceError.errorString;
+        }
         console.log(JSON.stringify(target));
         
         SendResults(status, target, 1);
