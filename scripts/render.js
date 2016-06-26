@@ -179,6 +179,7 @@ RenderPageIfRobotsAllowed = function(callback, page, target) {
         }catch(e) {
             console.log("Exception: " + e);
             rp.close();
+            target['robotsAllowed'] = true;
             return DoRender(callback, page, target);
         }
     });
