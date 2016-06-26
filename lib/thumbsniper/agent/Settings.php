@@ -39,8 +39,8 @@ abstract class Settings
 
     static private $phantomMaxRuns = 10;
     
-    static private $reflectionLeftToRightPath = DIRECTORY_ROOT . '/ext/3Dreflection';
-    static private $reflectionRightToLeftPath = DIRECTORY_ROOT . '/ext/3Dreflection_rightToLeft';
+//    static private $reflectionLeftToRightPath = DIRECTORY_ROOT . '/ext/3Dreflection';
+//    static private $reflectionRightToLeftPath = DIRECTORY_ROOT . '/ext/3Dreflection_rightToLeft';
 
     static private $masterFiletype = 'png';
 
@@ -64,11 +64,6 @@ abstract class Settings
         'blur2',
         'tornpaper1',
         'polaroid1'
-    );
-
-    static private $effectsExtraCommands = array(
-        'fade1' => DIRECTORY_ROOT . '/ext/3Dreflection',
-        'fade2' => DIRECTORY_ROOT . '/ext/3Dreflection_rightToLeft'
     );
 
     static private $domain;
@@ -273,6 +268,7 @@ abstract class Settings
 
 
     /**
+     * @param $effect
      * @return string
      */
     public static function getImageFiletype($effect)
@@ -439,11 +435,11 @@ abstract class Settings
 
     public static function getEffectsExtraCommand($effect)
     {
-        if(array_key_exists($effect, self::$effectsExtraCommands))
+        if(array_key_exists($effect, self::getEffectsExtraCommands()))
         {
-            if(is_executable(self::$effectsExtraCommands[$effect]))
+            if(is_executable(self::getEffectsExtraCommands()[$effect]))
             {
-                return self::$effectsExtraCommands[$effect];
+                return self::getEffectsExtraCommands()[$effect];
             }
         }
 
@@ -463,7 +459,10 @@ abstract class Settings
      */
     public static function getEffectsExtraCommands()
     {
-        return self::$effectsExtraCommands;
+        return array(
+            'fade1' => DIRECTORY_ROOT . '/ext/3Dreflection',
+            'fade2' => DIRECTORY_ROOT . '/ext/3Dreflection_rightToLeft'
+        );
     }
 
     /**
