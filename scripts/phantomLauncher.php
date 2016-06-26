@@ -62,7 +62,7 @@ if (is_resource($process)) {
 
 
 if ($exitCode != 0) {
-    $this->logger("PhantomJS failed");
+    print "PhantomJS failed\n";
     exit(1);
 }else {
     exit(0);
