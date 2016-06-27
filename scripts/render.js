@@ -64,15 +64,19 @@ CheckRobotsTxt = function(content, path) {
                 var ua = line.replace(line.substring(0, 11), '').trim();
                 if(ua === '*' || ua === userAgent) {
                     recordRules = true;
+                    console.log("robots.txt: UA: " + ua);
                 }else {
                     recordRules = false;
                 }
+                
             }else if(line.substring(0, 9) === "Disallow:" && recordRules) {
                 rulePath = line.replace(line.substring(0, 9), '').trim();
                 rules.push({ "rule":"Disallow", "path":rulePath });
+                console.log("robots.txt: " + "Disallow: " + rulePath);
             }else if(line.substring(0, 6) === "Allow:" && recordRules) {
                 rulePath = line.replace(line.substring(0, 6), '').trim();
                 rules.push({"rule":"Allow", "path":rulePath});
+                console.log("robots.txt: " + "Aallow: " + rulePath);
             }
         }
     }
