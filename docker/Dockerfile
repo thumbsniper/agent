@@ -66,8 +66,8 @@ RUN mkdir /opt/phantomjs && tar xf /tmp/phantomjs-2.1.1-linux-x86_64.tar.bz2 --s
 
 COPY etc/php5 /etc/php5
 
-#RUN git clone -b master https://github.com/thumbsniper/agent.git /opt/thumbsniper
-RUN git clone -b v0.9.6 https://github.com/thumbsniper/agent.git /opt/thumbsniper
+RUN git clone -b master https://github.com/thumbsniper/agent.git /opt/thumbsniper
+#RUN git clone -b v0.9.6 https://github.com/thumbsniper/agent.git /opt/thumbsniper
 
 RUN composer --working-dir=/opt/thumbsniper update
 
