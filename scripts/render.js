@@ -166,6 +166,7 @@ RenderPageIfRobotsAllowed = function(callback, page, target) {
                 rp.close();
                 var result = CheckRobotsTxt(content, path);
                 target['robotsAllowed'] = result;
+                target['tsRobotsCheck'] = Math.round(new Date().getTime()/1000);
 
                 if(result) {
                     return DoRender(callback, page, target);
@@ -371,6 +372,7 @@ RenderTargetCallback = function(status, target) {
         console.log("url: " + target.url);
         console.log("resolved url: " + target.resolvedUrl);
         console.log("robotsAllowed: " + target.robotsAllowed);
+        console.log("tsRobotsCheck: " + target.tsRobotsCheck);
         console.log("HTTP Status code: " + target.httpStatusCode);
         console.log("HTTP Status text: " + target.httpStatusText);
         console.log("snipeDuration: " + target.snipeDuration);
