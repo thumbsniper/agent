@@ -263,6 +263,7 @@ DoRender = function(callback, page, target) {
 
                 return window.setTimeout((function() {
                     page.evaluate(function(fileType) {
+                        //document.body.bgColor = 'white';
                         var style = document.createElement('style');
                         var text = document.createTextNode('body { background: #fff }');
                         style.setAttribute('type', 'text/css');
