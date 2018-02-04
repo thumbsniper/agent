@@ -18,7 +18,7 @@ while :; do
 		XVFBPID=$(pidof Xvfb)
         if [ -z "$XVFBPID" ]; then
             echo "xvfb is not running"
-            /usr/bin/Xvfb -noreset -screen scrn 1024x768x24 -extension RANDR -extension GLX ${DISPLAY} &
+            /usr/bin/Xvfb -noreset -screen scrn 1600x1200x24 -extension RANDR -extension GLX ${DISPLAY} &
             sleep 3
 		fi
 
