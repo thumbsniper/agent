@@ -1,4 +1,4 @@
-FROM opensuse:13.2
+FROM opensuse:42.3
 
 MAINTAINER Thomas Schulte <thomas@cupracer.de>
 
@@ -7,17 +7,17 @@ CMD ["/start.sh"]
 RUN zypper --non-interactive in curl
 
 RUN rpm --import \
-	http://download.opensuse.org/repositories/home:/TERROR-FX:/thumbsniper:/utilities/openSUSE_13.2/repodata/repomd.xml.key \
-	http://download.opensuse.org/repositories/Publishing/openSUSE_13.2/repodata/repomd.xml.key \
-	http://download.opensuse.org/repositories/server:/php/openSUSE_13.2/repodata/repomd.xml.key \
-	http://download.opensuse.org/repositories/server:/php:/applications/openSUSE_13.2/repodata/repomd.xml.key \
-	http://download.opensuse.org/repositories/server:/php:/extensions/openSUSE_13.2/repodata/repomd.xml.key
+	http://download.opensuse.org/repositories/home:/TERROR-FX:/thumbsniper:/utilities/openSUSE_Leap_42.3/repodata/repomd.xml.key \
+	http://download.opensuse.org/repositories/Publishing/openSUSE_Leap_42.3/repodata/repomd.xml.key \
+	http://download.opensuse.org/repositories/devel:/languages:/php/openSUSE_Leap_42.3/repodata/repomd.xml.key \
+	http://download.opensuse.org/repositories/server:/php:/applications/openSUSE_Leap_42.3/repodata/repomd.xml.key \
+	http://download.opensuse.org/repositories/server:/php:/extensions/openSUSE_Leap_42.3/repodata/repomd.xml.key
 
-RUN /usr/bin/zypper ar --refresh http://download.opensuse.org/repositories/home:/TERROR-FX:/thumbsniper:/utilities/openSUSE_13.2/home:TERROR-FX:thumbsniper:utilities.repo
-RUN /usr/bin/zypper ar --refresh http://download.opensuse.org/repositories/Publishing/openSUSE_13.2/Publishing.repo
-RUN /usr/bin/zypper ar --refresh http://download.opensuse.org/repositories/server:/php/openSUSE_13.2/server:php.repo
-RUN /usr/bin/zypper ar --refresh http://download.opensuse.org/repositories/server:/php:/applications/openSUSE_13.2/server:php:applications.repo
-RUN /usr/bin/zypper ar --refresh http://download.opensuse.org/repositories/server:/php:/extensions/openSUSE_13.2/server:php:extensions.repo
+RUN /usr/bin/zypper ar --refresh http://download.opensuse.org/repositories/home:/TERROR-FX:/thumbsniper:/utilities/openSUSE_Leap_42.3/home:TERROR-FX:thumbsniper:utilities.repo
+RUN /usr/bin/zypper ar --refresh http://download.opensuse.org/repositories/Publishing/openSUSE_Leap_42.3/Publishing.repo
+RUN /usr/bin/zypper ar --refresh http://download.opensuse.org/repositories/devel:/languages:/php/openSUSE_Leap_42.3/devel:languages:php.repo
+RUN /usr/bin/zypper ar --refresh http://download.opensuse.org/repositories/server:/php:/applications/openSUSE_Leap_42.3/server:php:applications.repo
+RUN /usr/bin/zypper ar --refresh http://download.opensuse.org/repositories/server:/php:/extensions/openSUSE_Leap_42.3/server:php:extensions.repo
 
 RUN zypper --non-interactive ref && zypper --non-interactive in \
 	bc \
@@ -66,8 +66,8 @@ RUN mkdir /opt/phantomjs && tar xf /tmp/phantomjs-2.1.1-linux-x86_64.tar.bz2 --s
 
 COPY etc/php5 /etc/php5
 
-RUN git clone -b master https://github.com/thumbsniper/agent.git /opt/thumbsniper
-#RUN git clone -b v0.9.6 https://github.com/thumbsniper/agent.git /opt/thumbsniper
+#RUN git clone -b master https://github.com/thumbsniper/agent.git /opt/thumbsniper
+RUN git clone -b v0.9.7 https://github.com/thumbsniper/agent.git /opt/thumbsniper
 
 RUN composer --working-dir=/opt/thumbsniper update
 
